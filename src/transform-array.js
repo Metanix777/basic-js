@@ -1,15 +1,21 @@
 module.exports = function transform(arr) {
-    if(!Array.isArray(arr))  throw "Error";
-    let arrRes = arr.map((el, i, mas) => {
-        let res;
-        res = (el === '--double-next')? mas[i+1]: (el === '--double-prev')? mas[i-1]: el;
-        return res;
-    });
+    if (!Array.isArray(arr)) throw new Error();
+    let res = [];
 
-    if (arrRes.indexOf('--discard-next')>0) arrRes.splice(arrRes.indexOf('--discard-next'),2);
-    else if (arrRes.indexOf('--discard-prev')>0) arrRes.splice(arrRes.indexOf('--discard-prev')-1,2);
-    
-    return arrRes;
-    
+    for(let i = 0; i < arr.length; i++) {
+        if (arr[i+1] === '--discard-prev') continue;
+        switch (arr[i]) {
+            case '--discard-prev': continue;
+                break;
+            case '--discard-next': i++;
+                break;   
+            case '--double-next': res.push(arr[i+1]);
+                break;
+            case '--double-prev': res.push(arr[i-1]);
+                break;
+            default: res.push(arr[i]);
+                break;
+        }
+    };
+    return res;   
 }
-
